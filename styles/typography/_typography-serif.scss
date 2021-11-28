@@ -1,0 +1,60 @@
+// Serif
+
+$serif-sizes: (
+  sm: (
+    font-size: px2rem(10) px2rem(10) px2rem(14),
+    line-height: px2rem(13) px2rem(13) px2rem(18),
+  ),
+  md: (
+    font-size: px2rem(16) px2rem(18) px2rem(24),
+    line-height: px2rem(22) px2rem(24) px2rem(31),
+  ),
+  lg: (
+    font-size: px2rem(24) px2rem(28) px2rem(36),
+    line-height: px2rem(31) px2rem(36) px2rem(46),
+  ),
+  xl: (
+    font-size: px2rem(28) px2rem(44) px2rem(56),
+    line-height: px2rem(36) px2rem(56) px2rem(72),
+  ),
+);
+
+%serif {
+  font-family: $primary-font;
+  font-weight: 400;
+  color: $primary-color;
+  padding: map-get($spacing, 1);
+}
+
+%serif-italic {
+  font-style: italic;
+}
+
+@each $size, $font-styles in $serif--sizes {
+  $fontSize: map-get($font-styles, font-size);
+  $lineHeight: map-get($font-styles, line-height);
+
+  %serif-#{$size} {
+    font-size: nth($fontSize, 1);
+    line-height: nth($lineHeight, 1);
+
+    @media (min-width: $breakpoint-md) {
+      font-size: nth($fontSize, 2);
+      line-height: nth($lineHeight, 2);
+    }
+
+    @media (min-width: $breakpoint-lg) {
+      font-size: nth($fontSize, 3);
+      line-height: nth($lineHeight, 3);
+    }
+  }
+}
+
+@mixin serif($size, $italic: false) {
+  @extend %serif;
+  @extend %serif-#{$size};
+
+  @if $italic == true {
+    @extend %serif-italic;
+  }
+}

@@ -1,0 +1,14 @@
+{
+    "extends": ["stylelint-config-standard-scss"],
+    "rules": {
+        "scss/no-global-function-names": null,
+        "value-keyword-case": [
+            "lower",
+            {
+                "ignoreProperties": ["font-family"],
+                "ignoreKeywords": ["Arial", "Helvetica"]
+            }
+        ], 
+        "color-hex-case": "upper"
+    }
+}
