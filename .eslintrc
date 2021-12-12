@@ -20,10 +20,10 @@
 			"@typescript-eslint/parser": [".ts", ".tsx"]
 		  },
 		"import/resolver": {
-		"typescript": [{
+			"typescript": [{
 				"alwaysTryTypes": true
-		}],
-		  "node": {
+			}],
+		  	"node": {
 			"extensions": [".js", ".jsx", ".ts", ".tsx", ".d.ts"]
 		  }
 		}

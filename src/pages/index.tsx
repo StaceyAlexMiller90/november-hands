@@ -16,7 +16,7 @@ interface Props {
 }
 
 const Home: NextPage<Props> = ({ story, preview }) => {
-  // we only initialize the visual editor if we're in preview mode
+  // only initialize the visual editor if we're in preview mode
   const liveStory = useStoryblok(story, preview);
   const components = liveStory.content.body.map((blok: SbEditableContent) => {
     return <DynamicComponent blok={blok} key={blok._uid} />;
