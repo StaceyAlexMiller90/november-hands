@@ -1,0 +1,51 @@
+// Sans serif Lato Font
+
+$sans-serif-sizes: (
+  sm: (
+    font-size: px2rem(16) px2rem(16),
+    line-height: px2rem(22) px2rem(22),
+  ),
+  md: (
+    font-size: px2rem(24) px2rem(24),
+    line-height: px2rem(32) px2rem(32),
+  ),
+);
+
+%sans-serif {
+  font-family: $secondary-font;
+  font-weight: 400;
+  color: $primary-black;
+  padding: map-get($spacing, 1);
+}
+
+%sans-serif-light {
+  font-weight: 300;
+}
+
+%sans-serif-bold {
+  font-weight: 600;
+}
+
+@each $size, $font-styles in $sans-serif-sizes {
+  $font-size: map-get($font-styles, "font-size");
+  $line-height: map-get($font-styles, "line-height");
+
+  %sans-serif--#{$size} {
+    font-size: nth($font-size, 1);
+    line-height: nth($line-height, 1);
+
+    @media (min-width: $breakpoint-lg) {
+      font-size: nth($font-size, 2);
+      line-height: nth($line-height, 2);
+    }
+  }
+}
+
+@mixin sans-serif($size, $italic: false, $bold: false) {
+  @extend %sans-serif;
+  @extend %sans-serif-#{$size};
+
+  @if $bold == true {
+    @extend %sans-serif-bold;
+  }
+}

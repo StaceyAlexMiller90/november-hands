@@ -1,0 +1,12 @@
+@import "../../styles/config";
+
+.logo {
+  width: px2rem(93);
+  margin-top: map-get($spacing, 3);
+  margin-bottom: map-get($spacing, 3);
+  margin-left: map-get($spacing, 6);
+}
+
+.logo__link_inverted {
+  filter: invert(1);
+}

@@ -1,0 +1,55 @@
+// Serif
+
+$serif-sizes: (
+  sm: (
+    font-size: px2rem(16) px2rem(16) px2rem(16),
+    line-height: px2rem(18) px2rem(18) px2rem(18),
+  ),
+  md: (
+    font-size: px2rem(24) px2rem(32) px2rem(32),
+    line-height: px2rem(32) px2rem(36) px2rem(36),
+  ),
+  lg: (
+    font-size: px2rem(32) px2rem(32) px2rem(40),
+    line-height: px2rem(36) px2rem(36) px2rem(45),
+  ),
+);
+
+%serif {
+  font-family: $primary-font;
+  color: $primary-black;
+  padding: map-get($spacing, 1);
+}
+
+%serif-bold {
+  font-weight: 700;
+}
+
+@each $size, $font-styles in $serif-sizes {
+  $font-size: map-get($font-styles, "font-size");
+  $line-height: map-get($font-styles, "line-height");
+
+  %serif-#{$size} {
+    font-size: nth($font-size, 1);
+    line-height: nth($line-height, 1);
+
+    @media (min-width: $breakpoint-md) {
+      font-size: nth($font-size, 2);
+      line-height: nth($line-height, 2);
+    }
+
+    @media (min-width: $breakpoint-lg) {
+      font-size: nth($font-size, 3);
+      line-height: nth($line-height, 3);
+    }
+  }
+}
+
+@mixin serif($size, $bold: false) {
+  @extend %serif;
+  @extend %serif-#{$size};
+
+  @if $bold == true {
+    @extend %serif-bold;
+  }
+}

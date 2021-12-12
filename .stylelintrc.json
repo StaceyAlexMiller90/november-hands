@@ -2,6 +2,7 @@
     "extends": ["stylelint-config-standard-scss"],
     "rules": {
         "scss/no-global-function-names": null,
+        "selector-class-pattern": null,
         "value-keyword-case": [
             "lower",
             {

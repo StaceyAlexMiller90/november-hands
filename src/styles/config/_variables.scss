@@ -1,0 +1,47 @@
+// Fonts import
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap");
+
+$primary-font: "EB Garamond", serif;
+$secondary-font: "Open Sans", sans-serif;
+$primary-grey: #E8E3DF;
+$primary-black: #120803;
+$dark-brown: #45200B;
+$mid-brown: #5E2B0F;
+$light-brown: #783713;
+$secondary-beige: #B5A191;
+$secondary-beige-light: #CFB8A6;
+$background-grey: #F6F4F3;
+$background-brown: #2B1407;
+$background-beige: #C0AB9A;
+$background-white: #FFFDFC;
+$breakpoint-xs: 0;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-2xl: 1440px;
+
+// $grid-gap: 20;
+// $grid-margin: 40;
+$spacing: (
+  1: px2rem(8),
+  2: px2rem(16),
+  3: px2rem(24),
+  4: px2rem(32),
+  5: px2rem(40),
+  6: px2rem(48),
+  7: px2rem(64),
+  8: px2rem(80),
+  9: px2rem(128),
+  10: px2rem(256),
+);
+
+// Z-index
+
+$menu: 4;
+$hamburger: 8;
+$navigation: 5;
+$navigation-item: 6;
+$dropdown: 3;
+$logo: 7;
