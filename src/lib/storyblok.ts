@@ -1,29 +1,32 @@
-import StoryblokClient, { StoryblokComponent, StoryData } from 'storyblok-js-client';
+import StoryblokClient, { StoryData } from 'storyblok-js-client';
 import { useEffect, useState } from 'react';
-import { initialiseApollo } from '../lib/apolloClient';
-import { GET_PAGE_BY_SLUG } from '../graphQL/pages';
 
 const Storyblok = new StoryblokClient({
-  accessToken: process.env.NEXT_PUBLIC_STORYBLOK_API_KEY,
+  accessToken: process.env.NEXT_PUBLIC_STORYBLOK_PREVIEW_SECRET,
   cache: {
     clear: 'auto',
     type: 'memory'
   }
 });
 
-export function useStoryblok(originalStory: StoryData, preview: boolean) {
+export function useStoryblok(preview: boolean, originalStory: StoryData, originalFooter: StoryData) {
   const [story, setStory] = useState(originalStory);
+  const [footer, setFooter] = useState(originalFooter);
 
   // adds the events for updating the visual editor
   // see https://www.storyblok.com/docs/guide/essentials/visual-editor#initializing-the-storyblok-js-bridge
   function initEventListeners() {
-    const { StoryblokBridge } = window;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { StoryblokBridge } = window as any;
     if (typeof StoryblokBridge !== 'undefined') {
       // initialize the bridge with your token
-      const storyblokInstance = new StoryblokBridge();
+      const storyblokInstance = new StoryblokBridge({
+        resolveRelations: ['footer.activeLinks', 'footer.socials', 'product.category'],
+        preventClicks: true
+      });
 
       // reload on Next.js page on save or publish event in the Visual Editor
-      storyblokInstance.on(['change', 'published'], () => location.reload());
+      storyblokInstance.on(['change', 'published'], () => window.location.reload());
 
       // live update the story on input events
       storyblokInstance.on('input', (event: StoryblokEventPayload) => {
@@ -32,22 +35,8 @@ export function useStoryblok(originalStory: StoryData, preview: boolean) {
           // change the story content through the setStory function
           setStory(event.story);
         }
-      });
-
-      storyblokInstance.on('enterEditmode', async (event: StoryblokEventPayload) => {
-        // loading the draft version on initial enter of editor
-        const apolloClient = initialiseApollo(true);
-        try {
-          const { data } = await apolloClient.query({
-            query: GET_PAGE_BY_SLUG,
-            variables: { slug: event.storyId }
-          });
-
-          if (data.story) {
-            setStory(data.story);
-          }
-        } catch (error) {
-          console.log(error);
+        if (footer && event.story.content._uid === footer.content._uid) {
+          setFooter(event.story);
         }
       });
     }
@@ -78,13 +67,14 @@ export function useStoryblok(originalStory: StoryData, preview: boolean) {
       // first load the bridge, then initialize the event listeners
       addBridge(initEventListeners);
     }
-  }, [originalStory, preview, setStory]); // runs the effect only once & defines effect dependencies
+  }, [originalStory, preview, setStory, originalFooter, setFooter]); // runs the effect only once & defines effect dependencies
 
   useEffect(() => {
     setStory(originalStory);
-  }, [originalStory]);
+    setFooter(originalFooter);
+  }, [originalStory, originalFooter]);
 
-  return story;
+  return { liveStory: story, liveFooter: footer };
 }
 
 export default Storyblok;

@@ -1,20 +1,20 @@
 import { ApolloProvider } from '@apollo/client';
 import { AppProps } from 'next/app';
 import { useApollo } from '../lib/apolloClient';
-// import AppLayout from '../layouts';
+import { config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+config.autoAddCss = false;
 
 import '../styles/main.scss';
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const client = useApollo(pageProps);
 
   return (
     <ApolloProvider client={client}>
-      {/* <AppLayout> */}
       <Component {...pageProps} />
-      {/* </AppLayout> */}
     </ApolloProvider>
   );
-}
+};
 
-export default MyApp;
+export default App;

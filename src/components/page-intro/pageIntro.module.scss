@@ -1,0 +1,53 @@
+@import "../../styles/config";
+
+.pageIntro {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 65vh;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  z-index: $page-intro;
+}
+
+.pageIntro_imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  @include image-overlay($opacity: 30%);
+}
+
+.pageIntro_imageWrapper_dark {
+  &::after {
+    background: linear-gradient(180deg, rgb(43 20 7 / 50%) 0%, rgb(43 20 7 / 0%) 30.2%, rgb(43 20 7 / 0%) 30.21%);
+  }
+}
+
+.pageIntro_headline {
+  @include serif("xl");
+
+  position: absolute;
+  padding-bottom: map-get($spacing, 3);
+  padding-left: map-get($spacing, 3);
+  padding-right: map-get($spacing, 3);
+  width: 100%;
+  text-align: center;
+
+  @media (min-width: $breakpoint-md) {
+    text-align: left;
+    width: auto;
+    max-width: 45%;
+    padding-right: map-get($spacing, 9);
+    padding-bottom: map-get($spacing, 8);
+  }
+}
+
+.pageIntro_headline_white {
+  color: $off-white;
+}
+
+.pageIntro_image {
+  object-fit: cover;
+}

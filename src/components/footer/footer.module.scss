@@ -1,0 +1,115 @@
+@import "../../styles/config";
+
+.footer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: $off-white;
+  height: px2rem(250);
+  overflow: hidden;
+
+  @media (min-width: $breakpoint-md) {
+    flex-direction: row-reverse;
+    align-items: flex-start;
+  }
+}
+
+.footer_copywright {
+  @include serif("xs");
+
+  margin-left: map-get($spacing, 4);
+  margin-bottom: map-get($spacing, 3);
+
+  .footer_dark & {
+    color: $off-white;
+  }
+
+  @media (min-width: $breakpoint-md) {
+    align-self: flex-end;
+    margin-left: map-get($spacing, 7);
+    margin-bottom: map-get($spacing, 6);
+  }
+}
+
+.footer_dark {
+  background: $darkest-brown;
+}
+
+.footer_imageWrapper {
+  position: relative;
+  height: 70vh;
+
+  @include image-overlay;
+}
+
+.footer_imageWrapper_dark {
+  &::after {
+    bottom: -#{px2rem(2)};
+    background: linear-gradient(180deg, $darkest-brown 0%, rgb(43 20 7 / 0%) 40.63%);
+    transform: rotate(-180deg);
+  }
+}
+
+.footer_image {
+  object-fit: cover;
+}
+
+.footerNavigationList {
+  display: flex;
+  flex-flow: row wrap;
+  margin: map-get($spacing, 4) map-get($spacing, 4) auto map-get($spacing, 4);
+
+  @media (min-width: $breakpoint-md) {
+    margin-top: map-get($spacing, 5);
+    justify-content: flex-start;
+    width: 50vw;
+    margin-right: 0;
+    margin-left: auto;
+  }
+}
+
+.footerNavigationItem {
+  @include serif("sm");
+
+  text-align: center;
+  margin-bottom: map-get($spacing, 4);
+  flex-basis: 25%;
+
+  @media (min-width: $breakpoint-md) {
+    text-align: left;
+    flex-basis: 50%;
+  }
+
+  .footer_dark & {
+    color: $off-white;
+  }
+}
+
+.footer_socialIcons {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-bottom: map-get($spacing, 3);
+  margin-right: map-get($spacing, 3);
+  display: flex;
+  justify-content: space-around;
+
+  @media (min-width: $breakpoint-md) {
+    position: static;
+    margin-top: map-get($spacing, 5);
+    margin-right: map-get($spacing, 8);
+  }
+}
+
+.footer_socialIcon {
+  color: $darkest-brown;
+  font-size: px2rem(20);
+
+  &:not(:last-child) {
+    margin-right: map-get($spacing, 3);
+  }
+
+  .footer_dark & {
+    color: $off-white;
+  }
+}

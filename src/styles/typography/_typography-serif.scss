@@ -1,23 +1,32 @@
 // Serif
 
 $serif-sizes: (
+  xs: (
+    font-size: px2rem(12) px2rem(12) px2rem(12),
+    line-height: px2rem(13.5) px2rem(13.5) px2rem(13.5),
+  ),
   sm: (
-    font-size: px2rem(16) px2rem(16) px2rem(16),
-    line-height: px2rem(18) px2rem(18) px2rem(18),
+    font-size: px2rem(14) px2rem(14) px2rem(14),
+    line-height: px2rem(16) px2rem(16) px2rem(16),
   ),
   md: (
-    font-size: px2rem(24) px2rem(32) px2rem(32),
-    line-height: px2rem(32) px2rem(36) px2rem(36),
+    font-size: px2rem(16) px2rem(16) px2rem(18),
+    line-height: px2rem(18) px2rem(18) px2rem(20),
   ),
   lg: (
     font-size: px2rem(32) px2rem(32) px2rem(40),
     line-height: px2rem(36) px2rem(36) px2rem(45),
   ),
+  xl: (
+    font-size: px2rem(32) px2rem(40) px2rem(48),
+    line-height: px2rem(36) px2rem(45) px2rem(54),
+  )
 );
 
 %serif {
   font-family: $primary-font;
-  color: $primary-black;
+  font-weight: 400;
+  color: $darkest-brown;
   padding: map-get($spacing, 1);
 }
 

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { AppProps } from 'next/app';
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, from } from '@apollo/client';
 
 // Types
 import type { NormalizedCacheObject, StoreObject } from '@apollo/client';
@@ -14,16 +14,17 @@ interface ApolloState {
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
 const createApolloClient = (preview?: boolean): ApolloClient<NormalizedCacheObject> => {
+  const httpLink = new HttpLink({
+    uri: 'https://gapi.storyblok.com/v1/api',
+    headers: {
+      token: process.env.NEXT_PUBLIC_STORYBLOK_PREVIEW_SECRET,
+      version: preview ? 'draft' : 'published'
+    }
+  });
+
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
-
-    link: new HttpLink({
-      uri: 'https://gapi.storyblok.com/v1/api',
-      headers: {
-        token: process.env.NEXT_PUBLIC_STORYBLOK_PREVIEW_SECRET,
-        version: preview ? 'draft' : 'published'
-      }
-    }),
+    link: httpLink,
     cache: new InMemoryCache(),
     credentials: 'include'
   });

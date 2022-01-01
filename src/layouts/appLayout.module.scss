@@ -1,0 +1,42 @@
+@import "../styles/config";
+
+.layout {
+  position: relative;
+}
+
+// To stop ability to scroll behind menu on mobile
+.layout_mobileMenuOpen {
+  @media (max-width: $breakpoint-md - 1) {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: map-get($spacing, 9);
+
+  // + pageIntro height
+  padding-top: 65vh;
+  background-color: $off-white;
+}
+
+.page_home {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.page_shop {
+  padding-top: px2rem(105);
+
+  @media (min-width: $breakpoint-md) {
+    padding-top: px2rem(145);
+  }
+}

@@ -1,0 +1,16 @@
+@import "../../styles/config";
+
+.productCard {
+  flex-basis: 30%;
+}
+
+.productCard_imageWrapper {
+  position: relative;
+  padding-bottom: 125%;
+
+  @include image-overlay;
+}
+
+.productCard_image {
+  object-fit: cover;
+}

@@ -1,10 +1,17 @@
 @import "../../styles/config";
 
 .logo {
+  z-index: $logo;
+  cursor: pointer;
+  position: absolute;
   width: px2rem(93);
-  margin-top: map-get($spacing, 3);
-  margin-bottom: map-get($spacing, 3);
-  margin-left: map-get($spacing, 6);
+  margin-left: map-get($spacing, 1);
+  margin-top: map-get($spacing, 1);
+
+  @media (min-width: $breakpoint-md) {
+    width: px2rem(120);
+    margin-left: map-get($spacing, 4);
+  }
 }
 
 .logo__link_inverted {

@@ -1,0 +1,75 @@
+@import "../../styles/config";
+
+.navigation {
+  height: 100%;
+}
+
+.navigationMobileMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: $off-white;
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  z-index: $mobile-menu;
+  transform: translateX(-100%);
+  transition: transform 0.5s $slide;
+}
+
+.navigationMobileMenu_open {
+  transform: translate3d(0, 0, 0);
+}
+
+.navigationList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+
+  @media (min-width: $breakpoint-md) {
+    justify-content: flex-end;
+    flex-direction: row;
+    margin-right: map-get($spacing, 5);
+  }
+}
+
+.navigationItem {
+  @include serif("md");
+
+  cursor: pointer;
+  margin-bottom: map-get($spacing, 7);
+
+  @media (min-width: $breakpoint-md) {
+    &:not(:last-child) {
+      margin-right: map-get($spacing, 7);
+    }
+
+    margin-bottom: 0;
+  }
+}
+
+.navigation_inverted {
+  .navigationItem {
+    color: $off-white;
+  }
+}
+
+.navigationItem_selected {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    content: "";
+    background: $darkest-brown;
+    left: 0;
+    bottom: - map-get($spacing, 1);
+    width: 100%;
+    height: px2rem(1);
+  }
+}
+
+.navigation_open {
+  transform: translate3d(0, 0, 0);
+}

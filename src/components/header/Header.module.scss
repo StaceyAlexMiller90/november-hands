@@ -5,9 +5,15 @@
   top: 0;
   left: 0;
   right: 0;
-  height: px2rem(144);
+  height: px2rem(105);
+  z-index: $header;
+  transition: all 0.5s ease-in-out;
+
+  @media (min-width: $breakpoint-md) {
+    height: px2rem(145);
+  }
 }
 
 .header_solid {
-  background-color: $background-grey;
+  background-color: $off-white;
 }

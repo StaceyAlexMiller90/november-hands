@@ -6,13 +6,13 @@ $primary-font: "EB Garamond", serif;
 $secondary-font: "Open Sans", sans-serif;
 $primary-grey: #E8E3DF;
 $primary-black: #120803;
+$darkest-brown: #2B1407;
 $dark-brown: #45200B;
 $mid-brown: #5E2B0F;
 $light-brown: #783713;
 $secondary-beige: #B5A191;
 $secondary-beige-light: #CFB8A6;
-$background-grey: #F6F4F3;
-$background-brown: #2B1407;
+$off-white: #F6F4F3;
 $background-beige: #C0AB9A;
 $background-white: #FFFDFC;
 $breakpoint-xs: 0;
@@ -38,10 +38,9 @@ $spacing: (
 );
 
 // Z-index
-
-$menu: 4;
-$hamburger: 8;
-$navigation: 5;
-$navigation-item: 6;
+$logo: 11;
+$hamburger: 12;
+$mobile-menu: 11;
+$header: 10;
+$page-intro: 9;
 $dropdown: 3;
-$logo: 7;

@@ -1,20 +1,28 @@
 // Sans serif Lato Font
 
 $sans-serif-sizes: (
-  sm: (
+  xs: (
     font-size: px2rem(16) px2rem(16),
     line-height: px2rem(22) px2rem(22),
   ),
+  sm: (
+    font-size: px2rem(16) px2rem(18),
+    line-height: px2rem(22) px2rem(24),
+  ),
   md: (
-    font-size: px2rem(24) px2rem(24),
-    line-height: px2rem(32) px2rem(32),
+    font-size: px2rem(16) px2rem(24),
+    line-height: px2rem(22) px2rem(32),
+  ),
+  lg: (
+    font-size: px2rem(24) px2rem(28),
+    line-height: px2rem(32) px2rem(38),
   ),
 );
 
 %sans-serif {
   font-family: $secondary-font;
   font-weight: 400;
-  color: $primary-black;
+  color: $darkest-brown;
   padding: map-get($spacing, 1);
 }
 
@@ -30,7 +38,7 @@ $sans-serif-sizes: (
   $font-size: map-get($font-styles, "font-size");
   $line-height: map-get($font-styles, "line-height");
 
-  %sans-serif--#{$size} {
+  %sans-serif-#{$size} {
     font-size: nth($font-size, 1);
     line-height: nth($line-height, 1);
 
@@ -41,11 +49,15 @@ $sans-serif-sizes: (
   }
 }
 
-@mixin sans-serif($size, $italic: false, $bold: false) {
+@mixin sans-serif($size, $italic: false, $bold: false, $light: false) {
   @extend %sans-serif;
   @extend %sans-serif-#{$size};
 
   @if $bold == true {
     @extend %sans-serif-bold;
+  }
+
+  @if $light == true {
+    @extend %sans-serif-light;
   }
 }

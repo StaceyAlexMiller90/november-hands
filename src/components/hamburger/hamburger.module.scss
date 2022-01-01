@@ -1,0 +1,92 @@
+@import "../../styles/config";
+
+.hamburger {
+  position: absolute;
+  right: px2rem(20);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  margin-left: auto;
+  align-self: center;
+  font-size: 0;
+  width: 1.5rem;
+  height: 2rem;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  z-index: $hamburger;
+
+  @media (min-width: $breakpoint-md) {
+    display: none;
+  }
+}
+
+.hamburger__dropdownOpen {
+  @media (min-width: $breakpoint-md) {
+    display: flex;
+    position: absolute;
+    right: 8.33%;
+    bottom: 0;
+  }
+}
+
+.hamburger__line {
+  background: $darkest-brown;
+  margin-left: auto;
+  display: block;
+  height: 0.125rem;
+  width: 1.5rem;
+  position: relative;
+
+  // Adding top and bottom hamburger lines to menu, 8px above & below
+  &::before {
+    background: $darkest-brown;
+    content: "";
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    transition: all 0.2s ease-out;
+    top: 0.5rem;
+  }
+
+  &::after {
+    background: $darkest-brown;
+    content: "";
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    transition: all 0.2s ease-out;
+    top: -0.5rem;
+  }
+}
+
+.hamburger__line_inverted {
+  background: $off-white;
+
+  &::before,
+  &::after {
+    background: $off-white;
+  }
+}
+
+// When menu opened hamburger becomes a cross
+.hamburger__line_cross {
+  background: transparent;
+
+  &::before {
+    background: $darkest-brown;
+    transform: rotate(-45deg);
+    top: 0;
+  }
+
+  &::after {
+    background: $darkest-brown;
+    transform: rotate(45deg);
+    top: 0;
+  }
+}

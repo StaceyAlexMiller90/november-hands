@@ -1,20 +1,13 @@
 import Link from 'next/link';
 import classNames from 'classnames';
 import { logoHref } from './logoBase64';
-import styles from './Logo.module.scss';
+import styles from './logo.module.scss';
 
-const Logo = ({
-  clickCallback,
-  inverted
-}: {
-  clickCallback: React.Dispatch<React.SetStateAction<boolean>>;
-  inverted: boolean;
-}) => (
-  <div className={styles.logo}>
-    <Link href="/" passHref>
+const Logo = ({ inverted }: { inverted: boolean }) => (
+  <Link href="/">
+    <a className={styles.logo}>
       <svg
         className={classNames(styles.logo__link, { [styles.logo__link_inverted]: inverted })}
-        onClick={() => clickCallback(false)}
         viewBox="0 0 100 100"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -29,8 +22,8 @@ const Logo = ({
           <image id="image0_1_6" xlinkHref={logoHref} />
         </defs>
       </svg>
-    </Link>
-  </div>
+    </a>
+  </Link>
 );
 
 export default Logo;
