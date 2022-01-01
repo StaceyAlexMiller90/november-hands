@@ -9,7 +9,6 @@ export const CORE_FOOTER_FIELDS = gql`
       copywright
       darkOverlay
       image {
-        id
         alt
         filename
         focus
@@ -45,7 +44,7 @@ export const GET_PAGE_BY_SLUG = gql`
 `;
 
 export const GET_PAGE_SLUGS = gql`
-  {
+  query getAllPageSlugs {
     PageItems {
       items {
         slug
@@ -58,7 +57,6 @@ export const GET_PRODUCT_PAGE = gql`
   ${CORE_FOOTER_FIELDS}
   query getProductPage {
     ProductpageItem(id: "shop") {
-      id
       content {
         _editable
         _uid
@@ -67,7 +65,6 @@ export const GET_PRODUCT_PAGE = gql`
         title
         bannerImage {
           alt
-          id
           focus
           filename
         }

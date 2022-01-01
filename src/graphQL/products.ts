@@ -4,6 +4,7 @@ export const CORE_OPTION_FIELDS = gql`
   fragment coreOptionFields on OptionItems {
     total
     items {
+      slug
       content {
         _editable
         _uid
@@ -32,7 +33,6 @@ export const CORE_OPTION_FIELDS = gql`
           name
         }
       }
-      slug
     }
   }
 `;

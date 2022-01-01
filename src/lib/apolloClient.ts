@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { AppProps } from 'next/app';
-import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, from } from '@apollo/client';
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 
 // Types
 import type { NormalizedCacheObject, StoreObject } from '@apollo/client';

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import classNames from 'classnames';
-import SbEditable, { SbEditableContent } from 'storyblok-react';
-import { IconName, library } from '@fortawesome/fontawesome-svg-core';
+import SbEditable from 'storyblok-react';
+import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import Image from 'next/image';
@@ -9,11 +9,12 @@ import Link from 'next/link';
 import { getObjectPosition } from '../../utils/utils';
 
 import styles from './footer.module.scss';
+import { Footer } from '../../interfaces/stories';
 
 library.add(fab);
 
 interface Props {
-  blok: SbEditableContent;
+  blok: Footer;
 }
 
 const Footer: FC<Props> = ({ blok }) => {
@@ -38,7 +39,7 @@ const Footer: FC<Props> = ({ blok }) => {
       </div>
       <footer className={classNames(styles.footer, { [styles.footer_dark]: blok.darkOverlay })}>
         <div className={styles.footer_socialIcons}>
-          {blok.socials.map((social: { content: { id: IconName; url: string } }) => {
+          {blok.socials.map((social) => {
             const { id, url } = social.content;
             return (
               <Link key={id} href={url}>
@@ -50,7 +51,7 @@ const Footer: FC<Props> = ({ blok }) => {
           })}
         </div>
         <ul className={styles.footerNavigationList}>
-          {blok.activeLinks?.map((link: { slug: string; name: string }) => (
+          {blok.activeLinks.map((link: { slug: string; name: string }) => (
             <li key={link.slug} className={classNames(styles.footerNavigationItem)}>
               <Link href={`/${link.slug}`}>
                 <a>{link.name}</a>

@@ -7,12 +7,13 @@ import { initialiseApollo, addApolloState } from '../../lib/apolloClient';
 import { useStoryblok } from '../../lib/storyblok';
 import Layout from '../../layouts/index';
 import ProductCard from '../../components/product-card';
+import { CategoryCollection, ProductPage } from '../../interfaces/stories';
 import { GET_PRODUCT_PAGE } from '../../graphQL/pages';
 import { GET_OPTIONS_BY_PAGE, GET_PRODUCTS_BY_CATEGORY } from '../../graphQL/products';
+import { GET_ALL_CATEGORIES, GET_ALL_COLLECTIONS } from '../../graphQL/categories';
 import { getObjectPosition } from '../../utils/utils';
 
 import styles from './shopPage.module.scss';
-import { GET_ALL_CATEGORIES, GET_ALL_COLLECTIONS } from '../../graphQL/categories';
 
 interface Props {
   story: StoryData;
@@ -23,8 +24,7 @@ interface Props {
   filter?: string[];
 }
 
-const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, options, filter }) => {
-  console.log(options);
+const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, options }) => {
   // only initialize the visual editor if we're in preview mode
   const { liveStory, liveFooter } = useStoryblok(preview, story, footer);
 
@@ -94,7 +94,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     query: GET_ALL_CATEGORIES
   });
 
-  const categoryPaths = CategoryItems.items.map((category) => {
+  const categoryPaths = CategoryItems.items.map((category: CategoryCollection) => {
     return { params: { slug: ['category', category.slug, category.uuid] } };
   });
 
@@ -104,7 +104,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     query: GET_ALL_COLLECTIONS
   });
 
-  const collectionPaths = CollectionItems.items.map((collection) => {
+  const collectionPaths = CollectionItems.items.map((collection: CategoryCollection) => {
     return { params: { slug: ['collection', collection.slug, collection.uuid] } };
   });
 
@@ -131,7 +131,7 @@ export const getStaticProps: GetStaticProps = async ({ preview = false, params }
       variables: { category: slug[2] }
     });
 
-    filters = { products: ProductItems?.items.map((item) => item.uuid).toString() };
+    filters = { products: ProductItems?.items.map((item: { uuid: string }) => item.uuid).toString() };
   } else {
     filters = slug && { [slug?.[0]]: slug?.[2] };
   }
