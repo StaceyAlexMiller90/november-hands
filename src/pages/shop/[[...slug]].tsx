@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import { StoryData } from 'storyblok-js-client';
 import SbEditable from 'storyblok-react';
 import { initialiseApollo, addApolloState } from '../../lib/apolloClient';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { useStoryblok } from '../../lib/storyblok';
 import Layout from '../../layouts/index';
 import ProductCard from '../../components/product-card';
@@ -35,11 +35,16 @@ interface Props {
 }
 
 const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, options, filters, fetchArgs }) => {
+  const router = useRouter();
+  const { query } = router;
+
+  const mounted = useRef(false);
   const [fetchArguments, setFetchArgs] = useState(fetchArgs);
   const [products, setProducts] = useState(options);
 
-  const { data, loading, refetch } = useQuery(GET_OPTIONS_BY_PAGE, {
+  const [fetchOptions, { data, loading, called }] = useLazyQuery(GET_OPTIONS_BY_PAGE, {
     ssr: false,
+    // Had to be network only as onCompleted doesnt trigger if data is fetched from cache
     fetchPolicy: 'network-only',
     variables: {
       ...fetchArguments,
@@ -49,17 +54,22 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
     onCompleted: (data) => setProducts(data?.OptionItems)
   });
 
-  const router = useRouter();
-  const { query } = router;
-
   // only initialize the visual editor if we're in preview mode
   const { liveStory, liveFooter } = useStoryblok(preview, story, footer);
 
   const { bannerImage, title, subtitle } = liveStory.content || {};
 
   useEffect(() => {
-    refetch();
-    console.log('useEffect in page', fetchArguments, data);
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+
+    fetchOptions();
+
+    return () => {
+      mounted.current = false;
+    };
   }, [fetchArguments]);
 
   if (!bannerImage?.filename || !title) {
@@ -91,19 +101,15 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
           </div>
         </SbEditable>
         {!query.slug && <Filters filters={filters} fetchArgs={fetchArguments} setFetchArgs={setFetchArgs} />}
-        {loading ? (
-          <div>Loading</div>
-        ) : (
-          <div className={styles.shopPage_productList}>
-            {!products?.items?.length ? (
-              <p>There are no products available</p>
-            ) : (
-              products.items.map((option) => {
-                return <ProductCard key={option.uuid} {...option} />;
-              })
-            )}
-          </div>
-        )}
+        <div className={styles.shopPage_productList}>
+          {!products?.items?.length ? (
+            <p>There are no products available</p>
+          ) : (
+            products.items.map((option) => {
+              return <ProductCard key={option.uuid} {...option} />;
+            })
+          )}
+        </div>
       </Layout>
     </>
   );

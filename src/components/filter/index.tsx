@@ -1,7 +1,7 @@
 import React, { FC, useState, Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import { CategoryCollection } from '../../interfaces/stories';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { GET_PRODUCTS_BY_CATEGORY } from '../../graphQL/products';
 
 import styles from './filters.module.scss';
@@ -19,10 +19,12 @@ interface Props {
 }
 
 const Filters: FC<Props> = ({ filters, fetchArgs, setFetchArgs }) => {
+  const mounted = useRef(false);
   const [selected, setSelected] = useState<Record<string, string[]>>({ category: [], collection: [] });
 
-  const { refetch } = useQuery(GET_PRODUCTS_BY_CATEGORY, {
+  const [fetchProductsByCategory] = useLazyQuery(GET_PRODUCTS_BY_CATEGORY, {
     variables: { category: selected.category.toString() },
+    // Had to be network only as onCompleted doesnt trigger if data is fetched from cache
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       setFetchArgs({
@@ -33,17 +35,8 @@ const Filters: FC<Props> = ({ filters, fetchArgs, setFetchArgs }) => {
     }
   });
 
-  console.log(selected);
-  // const [fetchProductsByCategory, { data: lazyData, called, networkStatus }] = useLazyQuery(GET_PRODUCTS_BY_CATEGORY, {
-  //   ssr: false,
-  //   notifyOnNetworkStatusChange: true
-  // });
-
-  // console.log('data', data, 'lazy', lazyData);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === 'all') {
-      console.log('isall', e.target.name);
       return setSelected({ ...selected, [e.target.name]: [] });
     }
 
@@ -58,20 +51,28 @@ const Filters: FC<Props> = ({ filters, fetchArgs, setFetchArgs }) => {
   };
 
   useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+
     if (selected.category.length) {
-      refetch();
+      fetchProductsByCategory();
     } else {
       setFetchArgs({ ...fetchArgs, page: 1, products: [] });
     }
 
     setFetchArgs({ ...fetchArgs, page: 1, collection: selected.collection });
+
+    return () => {
+      mounted.current = false;
+    };
   }, [selected]);
 
   return (
-    <>
+    <div>
       {Object.keys(filters).map((filter) => {
         const { items } = filters[filter];
-        console.log(filter);
 
         return (
           <div key={filter} className={styles.filter}>
@@ -114,7 +115,7 @@ const Filters: FC<Props> = ({ filters, fetchArgs, setFetchArgs }) => {
           </div>
         );
       })}
-    </>
+    </div>
   );
 };
 
