@@ -3,6 +3,7 @@
 .galleryItem {
   flex-basis: 40%;
   margin-left: map-get($spacing, 3);
+  margin-right: map-get($spacing, 3);
   margin-top: map-get($spacing, 4);
   transition: all 0.7s ease-out;
   opacity: 0.5;
@@ -12,6 +13,7 @@
   @media (min-width: $breakpoint-md) {
     margin-left: map-get($spacing, 6);
     margin-top: map-get($spacing, 9);
+    margin-right: map-get($spacing, 6);
   }
 
   &:first-child {
@@ -23,13 +25,8 @@
   }
 
   &:nth-child(even) {
-    margin-right: map-get($spacing, 3);
-    transform: translate3d(0, 30%, 0);
-
-    @media (min-width: $breakpoint-md) {
-      margin-left: calc(20vw - #{map-get($spacing, 6) * 2});
-      margin-right: map-get($spacing, 6);
-    }
+    transform: translate3d(0, 25%, 0);
+    margin-left: 0;
   }
 }
 
@@ -38,7 +35,7 @@
   transform: translate3d(0, 0, 0);
 
   &.galleryItem:nth-child(even) {
-    transform: translate3d(0, 10%, 0);
+    transform: translate3d(0, 5%, 0);
   }
 }
 

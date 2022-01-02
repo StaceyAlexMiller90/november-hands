@@ -3,7 +3,7 @@ import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import { StoryData } from 'storyblok-js-client';
 import { SbEditableContent } from 'storyblok-react';
 import { initialiseApollo, addApolloState } from '../lib/apolloClient';
-import DynamicComponent from '../components/dynamic-component/DynamicComponent';
+import DynamicComponent from '../components/dynamic-component';
 import { useStoryblok } from '../lib/storyblok';
 import { GET_PAGE_BY_SLUG, GET_PAGE_SLUGS } from '../graphQL/pages';
 import Layout from '../layouts/index';
@@ -18,8 +18,8 @@ interface Props {
 const Page: NextPage<Props> = ({ story, preview, footer, pageType }) => {
   // only initialize the visual editor if we're in preview mode
   const { liveStory, liveFooter } = useStoryblok(preview, story, footer);
-  const bodyComponents = liveStory?.content?.body?.map((blok: SbEditableContent) => {
-    return <DynamicComponent blok={blok} key={blok._uid} />;
+  const bodyComponents = liveStory?.content?.body?.map((blok: SbEditableContent, index: number) => {
+    return <DynamicComponent blok={blok} key={blok._uid} position={index} />;
   });
 
   return (

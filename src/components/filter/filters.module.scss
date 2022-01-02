@@ -1,0 +1,61 @@
+@import "../../styles/config";
+
+.filter {
+  margin-top: map-get($spacing, 4);
+  margin-left: map-get($spacing, 1);
+
+  @media (min-width: $breakpoint-md) {
+    margin-left: map-get($spacing, 6);
+  }
+}
+
+.filter_title {
+  @include sans-serif("sm", $light: true);
+}
+
+.filter_options {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: map-get($spacing, 1);
+  margin-top: map-get($spacing, 2);
+}
+
+.filter_optionCheckbox {
+  display: none;
+}
+
+.filter_option {
+  @include sans-serif("xs", $light: true);
+
+  border-radius: px2rem(25);
+  padding: map-get($spacing, 1);
+  flex-basis: 33%;
+  transition: all 0.2s ease;
+
+  @media (min-width: $breakpoint-md) {
+    flex-basis: 0;
+    margin-right: map-get($spacing, 4);
+  }
+
+  .filter_allOption & {
+    @include sans-serif("xs");
+
+    flex-basis: 100%;
+    white-space: nowrap;
+
+    @media (min-width: $breakpoint-md) {
+      flex-basis: 0;
+    }
+  }
+
+  &:hover {
+    background-color: $secondary-beige;
+    color: $off-white;
+  }
+}
+
+.filterOption_selected,
+.filter_option:focus {
+  background-color: $off-white;
+  outline: 1px solid $darkest-brown;
+}

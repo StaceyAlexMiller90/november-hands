@@ -5,6 +5,9 @@
   top: 0;
   left: 0;
   right: 0;
+  max-width: $breakpoint-4xl;
+  margin-left: auto;
+  margin-right: auto;
   height: px2rem(105);
   z-index: $header;
   transition: all 0.5s ease-in-out;

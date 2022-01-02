@@ -14,7 +14,7 @@ interface Props {
 
 const Navigation: FC<Props> = ({ mobileMenuOpen, isSolid, inverted, isMobile }) => {
   const router = useRouter();
-  const { pathname } = router;
+  const { asPath } = router;
 
   return (
     <nav
@@ -29,7 +29,7 @@ const Navigation: FC<Props> = ({ mobileMenuOpen, isSolid, inverted, isMobile }) 
         {isMobile && (
           <li
             className={classNames(styles.navigationItem, {
-              [styles.navigationItem_selected]: pathname === '/'
+              [styles.navigationItem_selected]: asPath === '/'
             })}
           >
             <Link href="/">
@@ -39,7 +39,7 @@ const Navigation: FC<Props> = ({ mobileMenuOpen, isSolid, inverted, isMobile }) 
         )}
         <li
           className={classNames(styles.navigationItem, {
-            [styles.navigationItem_selected]: pathname === '/about'
+            [styles.navigationItem_selected]: asPath === '/about'
           })}
         >
           <Link href="/about">
@@ -48,7 +48,7 @@ const Navigation: FC<Props> = ({ mobileMenuOpen, isSolid, inverted, isMobile }) 
         </li>
         <li
           className={classNames(styles.navigationItem, {
-            [styles.navigationItem_selected]: pathname === '/shop'
+            [styles.navigationItem_selected]: asPath.includes('/shop')
           })}
         >
           <Link href="/shop">
@@ -57,7 +57,7 @@ const Navigation: FC<Props> = ({ mobileMenuOpen, isSolid, inverted, isMobile }) 
         </li>
         <li
           className={classNames(styles.navigationItem, {
-            [styles.navigationItem_selected]: pathname === '/contact'
+            [styles.navigationItem_selected]: asPath === '/contact'
           })}
         >
           <Link href="/contact">

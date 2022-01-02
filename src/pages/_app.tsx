@@ -3,9 +3,10 @@ import { AppProps } from 'next/app';
 import { useApollo } from '../lib/apolloClient';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-config.autoAddCss = false;
 
 import '../styles/main.scss';
+
+config.autoAddCss = false;
 
 const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   const client = useApollo(pageProps);

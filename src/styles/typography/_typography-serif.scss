@@ -27,7 +27,6 @@ $serif-sizes: (
   font-family: $primary-font;
   font-weight: 400;
   color: $darkest-brown;
-  padding: map-get($spacing, 1);
 }
 
 %serif-bold {

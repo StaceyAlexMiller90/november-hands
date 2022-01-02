@@ -67,6 +67,10 @@
     bottom: - map-get($spacing, 1);
     width: 100%;
     height: px2rem(1);
+
+    .navigation_inverted & {
+      background: $off-white;
+    }
   }
 }
 

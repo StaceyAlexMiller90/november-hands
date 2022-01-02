@@ -1,16 +1,109 @@
 @import "../../styles/config";
 
 .productCard {
-  flex-basis: 30%;
+  flex-basis: 50%;
+  padding-right: map-get($spacing, 1);
+  padding-left: map-get($spacing, 1);
+  margin-bottom: map-get($spacing, 4);
+
+  @media (min-width: $breakpoint-md) and (max-width: ($breakpoint-3xl - 1)) {
+    flex-basis: 33.3%;
+
+    &:nth-child(6n + 2),
+    &:nth-child(6n + 3),
+    &:nth-child(6n + 4),
+    &:nth-child(6n + 5), {
+      transform: translate3d(0, 10%, 0);
+      margin-bottom: 10%;
+    }
+  }
+
+  @media (min-width: $breakpoint-3xl) {
+    flex-basis: 25%;
+
+    &:nth-child(6n + 3),
+    &:nth-child(6n + 4),
+    &:nth-child(6n + 5),
+    &:nth-child(6n + 6), {
+      transform: translate3d(0, 10%, 0);
+      margin-bottom: map-get($spacing, 9);
+    }
+  }
 }
 
 .productCard_imageWrapper {
   position: relative;
   padding-bottom: 125%;
+  margin-bottom: map-get($spacing, 2);
 
   @include image-overlay;
+
+  @media (min-width: $breakpoint-xs) and (max-width: ($breakpoint-md - 1)) {
+    .productCard:nth-child(6n + 2) &,
+    .productCard:nth-child(6n + 3) &,
+    .productCard:nth-child(6n + 6) & {
+      padding-bottom: 100%;
+    }
+  }
+
+  @media (min-width: $breakpoint-md) and (max-width: ($breakpoint-3xl - 1)) {
+    .productCard:nth-child(6n + 3) &,
+    .productCard:nth-child(6n + 4) & {
+      padding-bottom: 100%;
+    }
+  }
+
+  @media (min-width: $breakpoint-3xl) {
+    .productCard:nth-child(8n + 4) &,
+    .productCard:nth-child(8n + 5) & {
+      padding-bottom: 100%;
+    }
+  }
 }
 
 .productCard_image {
   object-fit: cover;
+}
+
+.productCard_product {
+  @include sans-serif("xs");
+
+  margin-bottom: map-get($spacing, 1);
+}
+
+.productCard_colour {
+  @include sans-serif("xs", $light: true);
+
+  margin-bottom: map-get($spacing, 1);
+}
+
+.productCard_pricing {
+  display: flex;
+  align-items: center;
+}
+
+.productCard_priceItem {
+  margin-right: map-get($spacing, 1);
+}
+
+.productCard_discountTag {
+  @include sans-serif("xs", $light: true);
+
+  display: inline-block;
+  padding-left: map-get($spacing, 1);
+  padding-right: map-get($spacing, 1);
+  color: $off-white;
+  background-color: $darkest-brown;
+}
+
+.productCard_discountPrice {
+  @include sans-serif("xs", $light: true);
+}
+
+.productCard_price {
+  @include sans-serif("xs", $light: true);
+}
+
+.productCard_price_old {
+  text-decoration: line-through;
 }

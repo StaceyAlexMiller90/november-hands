@@ -5,6 +5,7 @@ export const CORE_OPTION_FIELDS = gql`
     total
     items {
       slug
+      uuid
       content {
         _editable
         _uid

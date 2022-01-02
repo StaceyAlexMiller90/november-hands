@@ -21,9 +21,10 @@ $breakpoint-md: 768px;
 $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
 $breakpoint-2xl: 1440px;
+$breakpoint-3xl: 1680px;
+$breakpoint-4xl: 1920px;
 
-// $grid-gap: 20;
-// $grid-margin: 40;
+// Paddings and margin
 $spacing: (
   1: px2rem(8),
   2: px2rem(16),

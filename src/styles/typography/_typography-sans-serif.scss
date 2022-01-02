@@ -23,7 +23,6 @@ $sans-serif-sizes: (
   font-family: $secondary-font;
   font-weight: 400;
   color: $darkest-brown;
-  padding: map-get($spacing, 1);
 }
 
 %sans-serif-light {

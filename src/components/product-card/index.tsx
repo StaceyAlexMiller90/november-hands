@@ -2,33 +2,12 @@ import { FC } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import classNames from 'classnames';
-import { ImageProps } from '../../interfaces/general';
 import { getObjectPosition, getPriceInfo } from '../../utils/utils';
 import styles from './productCard.module.scss';
+import { OptionItem } from '../../interfaces/stories';
 
-interface Props {
-  product: {
-    name: string;
-  };
-  colour: {
-    name: string;
-  };
-  priceSupplement: string;
-  mainImage: ImageProps;
-  secondaryImages: ImageProps[];
-  slug: string;
-  discountPercentage: string;
-}
-
-const ProductCard: FC<Props> = ({
-  colour,
-  product,
-  priceSupplement,
-  discountPercentage,
-  mainImage,
-  secondaryImages,
-  slug
-}) => {
+const ProductCard: FC<OptionItem> = ({ content, slug }) => {
+  const { colour, product, priceSupplement, discountPercentage, mainImage } = content;
   const price = getPriceInfo(product, priceSupplement);
   const discountedPrice = discountPercentage && Math.round(price - (price / 100) * Number(discountPercentage));
 
@@ -44,10 +23,19 @@ const ProductCard: FC<Props> = ({
             objectPosition={getObjectPosition(mainImage)}
           />
         </div>
-        <h5>{product.name}</h5>
-        <h6>{colour.name}</h6>
-        {discountedPrice && <p>{discountedPrice}</p>}
-        <p>{price}</p>
+        <h5 className={styles.productCard_product}>{product.name}</h5>
+        <h6 className={styles.productCard_colour}>{colour.name}</h6>
+        <div className={styles.productCard_pricing}>
+          {discountPercentage && (
+            <p className={classNames(styles.productCard_discountTag, styles.productCard_priceItem)}>{discountPercentage}%</p>
+          )}
+          {discountedPrice && (
+            <p className={classNames(styles.productCard_discountPrice, styles.productCard_priceItem)}>€ {discountedPrice}</p>
+          )}
+          <p className={classNames(styles.productCard_price, { [styles.productCard_price_old]: discountPercentage })}>
+            € {price}
+          </p>
+        </div>
       </a>
     </Link>
   );

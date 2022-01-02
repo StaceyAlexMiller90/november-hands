@@ -39,6 +39,7 @@ export interface ProductPage {
 
 export interface OptionItem {
   slug: string;
+  uuid: string;
   content: {
     _editable: string;
     _uid: string;
@@ -59,4 +60,12 @@ export interface OptionItem {
     secondaryImages: ImageProps[];
     collection: CategoryCollection;
   };
+}
+
+export interface GalleryItem {
+  _editable: string;
+  _uid: string;
+  component: string;
+  text: string;
+  image: ImageProps;
 }

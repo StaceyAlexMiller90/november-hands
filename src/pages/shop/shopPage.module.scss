@@ -15,25 +15,35 @@
 .shopPage_title {
   @include serif("xl");
 
+  margin-top: map-get($spacing, 4);
+  margin-bottom: map-get($spacing, 1);
   margin-left: map-get($spacing, 1);
 
   @media (min-width: $breakpoint-md) {
-    margin-left: map-get($spacing, 5);
+    margin-top: map-get($spacing, 7);
+    margin-left: map-get($spacing, 6);
   }
 }
 
 .shopPage_subtitle {
-  @include sans-serif("md", $light: true);
+  @include sans-serif("sm", $light: true);
 
   margin-left: map-get($spacing, 1);
+  margin-bottom: map-get($spacing, 4);
 
   @media (min-width: $breakpoint-md) {
     max-width: 50vw;
-    margin-left: map-get($spacing, 5);
+    margin-left: map-get($spacing, 6);
   }
 }
 
 .shopPage_productList {
   display: flex;
   flex-wrap: wrap;
+  margin-top: map-get($spacing, 6);
+
+  @media (min-width: $breakpoint-md) {
+    margin-left: map-get($spacing, 5);
+    margin-right: map-get($spacing, 5);
+  }
 }

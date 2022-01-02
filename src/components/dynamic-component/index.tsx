@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import SbEditable, { SbEditableContent } from 'storyblok-react';
-import dashify from 'dashify';
 import GalleryItem from '../gallery-item';
 
 interface IComponents {
@@ -9,19 +8,20 @@ interface IComponents {
 
 interface Props {
   blok?: SbEditableContent;
+  position?: number;
 }
 
 const Components: IComponents = {
   galleryItem: GalleryItem
 };
 
-const DynamicComponent: FC<Props> = ({ blok }) => {
+const DynamicComponent: FC<Props> = ({ blok, position }) => {
   if (blok) {
     if (typeof Components[blok.component] !== 'undefined') {
       const FoundComponent = Components[blok.component];
       return (
         <SbEditable content={{ ...blok, _editable: blok._editable || undefined }} key={blok._uid}>
-          <FoundComponent blok={blok} />
+          <FoundComponent blok={blok} position={position} />
         </SbEditable>
       );
     }

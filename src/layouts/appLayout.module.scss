@@ -2,6 +2,9 @@
 
 .layout {
   position: relative;
+  max-width: $breakpoint-4xl;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 // To stop ability to scroll behind menu on mobile
@@ -31,6 +34,7 @@
 .page_home {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .page_shop {
