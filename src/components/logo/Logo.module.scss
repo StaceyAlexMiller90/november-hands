@@ -17,3 +17,10 @@
 .logo__link_inverted {
   filter: invert(1);
 }
+
+.logo__link_watermark {
+  pointer-events: none;
+  width: 50vw;
+  opacity: 0.2;
+  margin-top: 100%;
+}

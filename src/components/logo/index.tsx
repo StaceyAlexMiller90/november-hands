@@ -3,11 +3,15 @@ import classNames from 'classnames';
 import { logoHref } from './logoBase64';
 import styles from './logo.module.scss';
 
-const Logo = ({ inverted }: { inverted: boolean }) => (
+const Logo = ({ inverted, isWatermark }: { inverted?: boolean; isWatermark?: boolean }) => (
   <Link href="/">
     <a className={styles.logo}>
       <svg
-        className={classNames(styles.logo__link, { [styles.logo__link_inverted]: inverted })}
+        className={classNames(
+          styles.logo__link,
+          { [styles.logo__link_inverted]: inverted || isWatermark },
+          { [styles.logo__link_watermark]: isWatermark }
+        )}
         viewBox="0 0 100 100"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"

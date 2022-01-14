@@ -9,7 +9,8 @@ import { useLazyQuery } from '@apollo/client';
 import { useStoryblok } from '../../lib/storyblok';
 import Layout from '../../layouts/index';
 import ProductCard from '../../components/product-card';
-import Filters from '../../components/filter';
+import Filters from '../../components/filters';
+import Logo from '../../components/logo';
 import { CategoryCollection, OptionItem, ProductPage } from '../../interfaces/stories';
 import { GET_PRODUCT_PAGE } from '../../graphQL/pages';
 import { GET_OPTIONS_BY_PAGE, GET_PRODUCTS_BY_CATEGORY } from '../../graphQL/products';
@@ -34,43 +35,83 @@ interface Props {
   fetchArgs: FetchArgs;
 }
 
-const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, options, filters, fetchArgs }) => {
+const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, options, filters }) => {
   const router = useRouter();
   const { query } = router;
 
   const mounted = useRef(false);
-  const [fetchArguments, setFetchArgs] = useState(fetchArgs);
-  const [products, setProducts] = useState(options);
+  const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<Record<string, string[]>>({ category: [], collection: [] });
+  const [products, setProducts] = useState([]);
+  const [optionList, setOptions] = useState(options.items);
 
-  const [fetchOptions, { data, loading, called }] = useLazyQuery(GET_OPTIONS_BY_PAGE, {
+  const [fetchOptions] = useLazyQuery(GET_OPTIONS_BY_PAGE, {
     ssr: false,
     // Had to be network only as onCompleted doesnt trigger if data is fetched from cache
     fetchPolicy: 'network-only',
     variables: {
-      ...fetchArguments,
-      collection: fetchArguments?.collection?.toString() || undefined,
-      products: fetchArguments?.products?.toString() || undefined
+      page,
+      products: products.toString() || undefined,
+      collection: selected.collection.toString() || undefined
     },
-    onCompleted: (data) => setProducts(data?.OptionItems)
+    onCompleted: (data) => {
+      setOptions(data.OptionItems.items);
+    }
   });
+
+  const [fetchProductsByCategory] = useLazyQuery(GET_PRODUCTS_BY_CATEGORY, {
+    variables: { category: selected.category.toString() },
+    // Had to be network only as onCompleted doesnt trigger if data is fetched from cache
+    fetchPolicy: 'network-only',
+    onCompleted: (data) => {
+      const productIds = data?.ProductItems.items.map((item: { uuid: string }) => item.uuid);
+      if (!productIds.length) {
+        setProducts([]);
+        setOptions([]);
+      } else {
+        setProducts(productIds);
+      }
+    }
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === 'all') {
+      return setSelected({ ...selected, [e.target.name]: [] });
+    }
+
+    if (e.target.checked) {
+      return setSelected({ ...selected, [e.target.name]: [...selected[e.target.name], e.target.value] });
+    } else {
+      return setSelected({
+        ...selected,
+        [e.target.name]: selected[e.target.name].filter((item) => item !== e.target.value)
+      });
+    }
+  };
 
   // only initialize the visual editor if we're in preview mode
   const { liveStory, liveFooter } = useStoryblok(preview, story, footer);
 
   const { bannerImage, title, subtitle } = liveStory.content || {};
 
+  // To stop queries running on initial mount
   useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      return;
-    }
-
-    fetchOptions();
-
+    mounted.current = true;
     return () => {
       mounted.current = false;
     };
-  }, [fetchArguments]);
+  }, []);
+
+  useEffect(() => {
+    if (mounted.current) {
+      if (selected.category.length) {
+        fetchProductsByCategory();
+      } else {
+        setProducts([]);
+      }
+      fetchOptions();
+    }
+  }, [selected]);
 
   if (!bannerImage?.filename || !title) {
     return null;
@@ -85,7 +126,7 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
       </Head>
       <Layout footer={liveFooter?.content} pageType={pageType}>
         <SbEditable content={{ ...liveStory.content, _editable: liveStory.content._editable || undefined }}>
-          <div>
+          <div className={styles.shopPage}>
             <div className={styles.shopPage_imageWrapper}>
               <Image
                 className={styles.shopPage_image}
@@ -100,15 +141,25 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
             {subtitle && <h2 className={styles.shopPage_subtitle}>{subtitle}</h2>}
           </div>
         </SbEditable>
-        {!query.slug && <Filters filters={filters} fetchArgs={fetchArguments} setFetchArgs={setFetchArgs} />}
+        {!query.slug &&
+          Object.keys(filters).map((filter) => (
+            <Filters
+              key={filter}
+              type={filter}
+              options={filters[filter].items}
+              onChange={handleChange}
+              selected={selected}
+            />
+          ))}
         <div className={styles.shopPage_productList}>
-          {!products?.items?.length ? (
+          {!optionList?.length ? (
             <p>There are no products available</p>
           ) : (
-            products.items.map((option) => {
+            optionList.map((option) => {
               return <ProductCard key={option.uuid} {...option} />;
             })
           )}
+          <Logo isWatermark />
         </div>
       </Layout>
     </>

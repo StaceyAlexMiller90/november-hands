@@ -38,6 +38,7 @@
 }
 
 .shopPage_productList {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   margin-top: map-get($spacing, 6);

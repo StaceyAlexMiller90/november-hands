@@ -13,7 +13,7 @@
     &:nth-child(6n + 3),
     &:nth-child(6n + 4),
     &:nth-child(6n + 5), {
-      transform: translate3d(0, 10%, 0);
+      transform: translate3d(0, 15%, 0);
       margin-bottom: 10%;
     }
   }
@@ -25,7 +25,7 @@
     &:nth-child(6n + 4),
     &:nth-child(6n + 5),
     &:nth-child(6n + 6), {
-      transform: translate3d(0, 10%, 0);
+      transform: translate3d(0, 15%, 0);
       margin-bottom: map-get($spacing, 9);
     }
   }
