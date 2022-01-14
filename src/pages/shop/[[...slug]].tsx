@@ -11,7 +11,7 @@ import Layout from '../../layouts/index';
 import ProductCard from '../../components/product-card';
 import Filters from '../../components/filters';
 import Logo from '../../components/logo';
-import { CategoryCollection, OptionItem, ProductPage } from '../../interfaces/stories';
+import { CategoryCollection, Footer, OptionItem, ProductPage } from '../../interfaces/stories';
 import { GET_PRODUCT_PAGE } from '../../graphQL/pages';
 import { GET_OPTIONS_BY_PAGE, GET_PRODUCTS_BY_CATEGORY } from '../../graphQL/products';
 import { GET_ALL_CATEGORIES, GET_ALL_COLLECTIONS } from '../../graphQL/categories';
@@ -124,7 +124,7 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout footer={liveFooter?.content} pageType={pageType}>
+      <Layout footer={liveFooter?.content as Footer} pageType={pageType}>
         <SbEditable content={{ ...liveStory.content, _editable: liveStory.content._editable || undefined }}>
           <div className={styles.shopPage}>
             <div className={styles.shopPage_imageWrapper}>

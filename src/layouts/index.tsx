@@ -9,6 +9,7 @@ import Navigation from '../components/navigation';
 import throttle from 'lodash/throttle';
 import styles from './appLayout.module.scss';
 import { SbEditableContent } from 'storyblok-react';
+import { Footer as TFooter } from '../interfaces/stories';
 
 interface Props {
   intro?: SbEditableContent & {
@@ -20,7 +21,7 @@ interface Props {
       filename: string;
     };
   };
-  footer: SbEditableContent;
+  footer: TFooter;
   pageType: string;
 }
 

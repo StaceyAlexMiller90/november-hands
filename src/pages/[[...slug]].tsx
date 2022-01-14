@@ -7,6 +7,7 @@ import DynamicComponent from '../components/dynamic-component';
 import { useStoryblok } from '../lib/storyblok';
 import { GET_PAGE_BY_SLUG, GET_PAGE_SLUGS } from '../graphQL/pages';
 import Layout from '../layouts/index';
+import { Footer } from '../interfaces/stories';
 
 interface Props {
   story: StoryData;
@@ -29,7 +30,7 @@ const Page: NextPage<Props> = ({ story, preview, footer, pageType }) => {
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout intro={liveStory?.content?.intro?.[0]} footer={liveFooter?.content} pageType={pageType}>
+      <Layout intro={liveStory?.content?.intro?.[0]} footer={liveFooter?.content as Footer} pageType={pageType}>
         {bodyComponents}
       </Layout>
     </>

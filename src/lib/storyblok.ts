@@ -1,5 +1,6 @@
 import StoryblokClient, { StoryData } from 'storyblok-js-client';
 import { useEffect, useState } from 'react';
+import { Footer } from '../interfaces/stories';
 
 const Storyblok = new StoryblokClient({
   accessToken: process.env.NEXT_PUBLIC_STORYBLOK_PREVIEW_SECRET,
