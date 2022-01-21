@@ -1,7 +1,7 @@
 import { FC, Dispatch, SetStateAction } from 'react';
 import classNames from 'classnames';
 import Link from 'next/link';
-import styles from './navigation.module.scss';
+import styles from './Navigation.module.scss';
 import { useRouter } from 'next/router';
 
 interface Props {

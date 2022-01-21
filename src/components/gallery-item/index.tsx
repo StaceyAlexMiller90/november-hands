@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import SbEditable from 'storyblok-react';
 import { getObjectPosition } from '../../utils/utils';
-import styles from './galleryItem.module.scss';
+import styles from './GalleryItem.module.scss';
 import { GalleryItem } from '../../interfaces/stories';
 
 interface Props {

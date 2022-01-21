@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import classNames from 'classnames';
 import { getObjectPosition, getPriceInfo } from '../../utils/utils';
-import styles from './productCard.module.scss';
+import styles from './ProductCard.module.scss';
 import { OptionItem } from '../../interfaces/stories';
 
 const ProductCard: FC<OptionItem> = ({ content, slug }) => {

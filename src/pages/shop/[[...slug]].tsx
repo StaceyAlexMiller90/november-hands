@@ -17,7 +17,7 @@ import { GET_OPTIONS_BY_PAGE, GET_PRODUCTS_BY_CATEGORY } from '../../graphQL/pro
 import { GET_ALL_CATEGORIES, GET_ALL_COLLECTIONS } from '../../graphQL/categories';
 import { getObjectPosition } from '../../utils/utils';
 
-import styles from './shopPage.module.scss';
+import styles from './ShopPage.module.scss';
 import { useRouter } from 'next/router';
 
 interface FetchArgs {

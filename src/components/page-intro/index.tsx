@@ -3,7 +3,7 @@ import Image from 'next/image';
 import classNames from 'classnames';
 import SbEditable, { SbEditableContent } from 'storyblok-react';
 import { getObjectPosition } from '../../utils/utils';
-import styles from './pageIntro.module.scss';
+import styles from './PageIntro.module.scss';
 
 interface Props {
   blok: SbEditableContent & {

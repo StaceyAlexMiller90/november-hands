@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getObjectPosition } from '../../utils/utils';
 
-import styles from './footer.module.scss';
+import styles from './Footer.module.scss';
 import { Footer } from '../../interfaces/stories';
 
 library.add(fab);

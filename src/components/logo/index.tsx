@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import classNames from 'classnames';
 import { logoHref } from './logoBase64';
-import styles from './logo.module.scss';
+import styles from './Logo.module.scss';
 
 const Logo = ({ inverted, isWatermark }: { inverted?: boolean; isWatermark?: boolean }) => (
   <Link href="/">

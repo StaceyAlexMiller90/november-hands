@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import classNames from 'classnames';
 import { CategoryCollection } from '../../interfaces/stories';
 
-import styles from './filters.module.scss';
+import styles from './Filters.module.scss';
 
 interface Props {
   type: string;

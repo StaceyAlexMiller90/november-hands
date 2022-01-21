@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import classNames from 'classnames';
-import styles from './hamburger.module.scss';
+import styles from './Hamburger.module.scss';
 
 interface Props {
   mobileMenuOpen: boolean;
