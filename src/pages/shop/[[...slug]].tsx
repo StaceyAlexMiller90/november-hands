@@ -49,38 +49,44 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
   const [optionList, setOptions] = useState<OptionItem[]>(options.items);
   const [hasMore, setHasMore] = useState(options.items.length < total);
 
-  const fetchOptions = useCallback(async (variables = {}, fetchMore?: boolean) => {
-    const { data } = await client.query({
-      query: GET_OPTIONS_BY_PAGE,
-      variables: {
-        page: page.current,
-        products: products.toString() || undefined,
-        collection: collections.toString() || undefined,
-        ...variables
-      }
-    });
-    setOptions((prevState) => (fetchMore ? [...prevState, ...data.OptionItems.items] : data.OptionItems.items));
-    setHasMore(data.OptionItems.items.length < data.OptionItems.total);
-  }, []);
-
-  const fetchProducts = useCallback(async (category: string[]) => {
-    const { data } = await client.query({
-      query: GET_PRODUCTS_BY_CATEGORY,
-      variables: {
-        category: category.toString() || undefined
-      }
-    });
-    const productIds = data.ProductItems.items.map((item: { uuid: string }) => item.uuid);
-    if (!productIds.length) {
-      setProducts([]);
-      setOptions([]);
-    } else {
-      setProducts(productIds.toString());
-      fetchOptions({
-        products: productIds.toString() || undefined
+  const fetchOptions = useCallback(
+    async (variables = {}, fetchMore?: boolean) => {
+      const { data } = await client.query({
+        query: GET_OPTIONS_BY_PAGE,
+        variables: {
+          page: page.current,
+          products: products.toString() || undefined,
+          collection: collections.toString() || undefined,
+          ...variables
+        }
       });
-    }
-  }, []);
+      setOptions((prevState) => (fetchMore ? [...prevState, ...data.OptionItems.items] : data.OptionItems.items));
+      setHasMore(data.OptionItems.items.length < data.OptionItems.total);
+    },
+    [products, collections, client]
+  );
+
+  const fetchProducts = useCallback(
+    async (category: string[]) => {
+      const { data } = await client.query({
+        query: GET_PRODUCTS_BY_CATEGORY,
+        variables: {
+          category: category.toString() || undefined
+        }
+      });
+      const productIds = data.ProductItems.items.map((item: { uuid: string }) => item.uuid);
+      if (!productIds.length) {
+        setProducts([]);
+        setOptions([]);
+      } else {
+        setProducts(productIds.toString());
+        fetchOptions({
+          products: productIds.toString() || undefined
+        });
+      }
+    },
+    [client, fetchOptions]
+  );
 
   const observer = useRef<IntersectionObserver>();
   const lastEl = useCallback(
@@ -123,7 +129,7 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
         });
       }
     }
-  }, [categories, fetchOptions, fetchProducts]);
+  }, [categories]);
 
   useEffect(() => {
     if (mounted.current) {
@@ -132,7 +138,7 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
         collection: collections.toString() || undefined
       });
     }
-  }, [collections, fetchOptions]);
+  }, [collections]);
 
   // To stop queries running on initial mount
   useEffect(() => {
