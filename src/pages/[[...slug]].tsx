@@ -49,7 +49,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   const paths = PageItems?.items.map((item: { slug: string }) => {
     return {
-      params: { slug: item.slug === 'home' ? null : [`/${item.slug}`] }
+      params: { slug: item.slug === 'home' ? null : [`${item.slug}`] }
     };
   });
 
