@@ -89,7 +89,7 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
 
   const observer = useRef<IntersectionObserver>();
   const lastEl = useCallback(
-    (node) => {
+    (node: HTMLElement) => {
       if (observer.current) {
         observer.current.disconnect();
       }

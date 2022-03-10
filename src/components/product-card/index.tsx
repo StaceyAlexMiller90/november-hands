@@ -6,7 +6,7 @@ import { getObjectPosition, getPriceInfo } from '../../utils/utils';
 import styles from './ProductCard.module.scss';
 import { OptionItem } from '../../interfaces/stories';
 
-const ProductCard: FC<OptionItem> = forwardRef(({ content, slug }, ref) => {
+const ProductCard: FC<OptionItem> = forwardRef<HTMLAnchorElement, OptionItem>(({ content, slug }, ref) => {
   const { colour, product, priceSupplement, discountPercentage, mainImage } = content;
   const price = getPriceInfo(product, priceSupplement);
   const discountedPrice = discountPercentage && Math.round(price - (price / 100) * Number(discountPercentage));
