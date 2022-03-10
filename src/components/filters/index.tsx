@@ -8,7 +8,7 @@ interface Props {
   type: string;
   options: CategoryCollection[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  selected: Record<string, string[]>;
+  selected: [];
 }
 
 const Filters: FC<Props> = ({ type, options, onChange, selected }) => {
@@ -18,7 +18,7 @@ const Filters: FC<Props> = ({ type, options, onChange, selected }) => {
       <ul className={styles.filter_options}>
         <li className={styles.filter_allOption}>
           <label className={styles.filter_option} htmlFor={`all ${type}`}>
-            All {type}
+            All
           </label>
           <input
             type="checkbox"
@@ -33,7 +33,7 @@ const Filters: FC<Props> = ({ type, options, onChange, selected }) => {
           <li key={option.uuid}>
             <label
               className={classNames(styles.filter_option, {
-                [styles.filterOption_selected]: selected[type].includes(option.uuid)
+                [styles.filterOption_selected]: selected.includes(option.uuid)
               })}
               htmlFor={option.uuid}
             >

@@ -1,4 +1,4 @@
-import { FC, Dispatch, SetStateAction } from 'react';
+import { FC } from 'react';
 import classNames from 'classnames';
 import Logo from '../logo';
 import styles from './Header.module.scss';

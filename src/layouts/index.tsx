@@ -67,7 +67,7 @@ const Layout: FC<Props> = ({ children, intro, footer, pageType }) => {
   return (
     <div className={classNames(styles.layout, { [styles.layout_mobileMenuOpen]: mobileMenuOpen })}>
       <Header isSolid={pageType === 'shop' ? true : isSolid} isDark={isDark}>
-        <Hamburger isSolid={isSolid} inverted={isDark} mobileMenuOpen={mobileMenuOpen} toggleMobileMenu={toggleMobileMenu} />
+        <Hamburger inverted={!!isDark && !isSolid} mobileMenuOpen={mobileMenuOpen} toggleMobileMenu={toggleMobileMenu} />
         <Navigation
           inverted={isDark}
           mobileMenuOpen={mobileMenuOpen}

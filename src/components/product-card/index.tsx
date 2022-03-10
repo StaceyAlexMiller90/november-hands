@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, forwardRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import classNames from 'classnames';
@@ -6,14 +6,14 @@ import { getObjectPosition, getPriceInfo } from '../../utils/utils';
 import styles from './ProductCard.module.scss';
 import { OptionItem } from '../../interfaces/stories';
 
-const ProductCard: FC<OptionItem> = ({ content, slug }) => {
+const ProductCard: FC<OptionItem> = forwardRef(({ content, slug }, ref) => {
   const { colour, product, priceSupplement, discountPercentage, mainImage } = content;
   const price = getPriceInfo(product, priceSupplement);
   const discountedPrice = discountPercentage && Math.round(price - (price / 100) * Number(discountPercentage));
 
   return (
     <Link href={`/${slug}`}>
-      <a className={styles.productCard}>
+      <a ref={ref} className={styles.productCard}>
         <div className={styles.productCard_imageWrapper}>
           <Image
             className={styles.productCard_image}
@@ -39,6 +39,6 @@ const ProductCard: FC<OptionItem> = ({ content, slug }) => {
       </a>
     </Link>
   );
-};
+});
 
 export default ProductCard;

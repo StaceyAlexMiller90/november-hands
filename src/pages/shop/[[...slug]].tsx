@@ -1,11 +1,12 @@
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
+import { useRouter } from 'next/router';
 import { StoryData } from 'storyblok-js-client';
 import SbEditable from 'storyblok-react';
 import { initialiseApollo, addApolloState } from '../../lib/apolloClient';
-import { useLazyQuery } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 import { useStoryblok } from '../../lib/storyblok';
 import Layout from '../../layouts/index';
 import ProductCard from '../../components/product-card';
@@ -18,8 +19,6 @@ import { GET_ALL_CATEGORIES, GET_ALL_COLLECTIONS } from '../../graphQL/categorie
 import { getObjectPosition } from '../../utils/utils';
 
 import styles from './ShopPage.module.scss';
-import { useRouter } from 'next/router';
-
 interface FetchArgs {
   products: string;
   collection: string;
@@ -28,7 +27,7 @@ interface FetchArgs {
 interface Props {
   story: StoryData;
   preview: boolean;
-  options: { items: OptionItem[] };
+  options: { total: number; items: OptionItem[] };
   footer: StoryData;
   pageType: string;
   filters: Record<string, { items: CategoryCollection[] }>;
@@ -37,62 +36,76 @@ interface Props {
 
 const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, options, filters }) => {
   const router = useRouter();
+  const client = useApolloClient();
   const { query } = router;
-
-  const mounted = useRef(false);
-  const [page, setPage] = useState(1);
-  const [selected, setSelected] = useState<Record<string, string[]>>({ category: [], collection: [] });
+  const mounted = useRef(null);
+  const { total } = options;
+  const page = useRef(1);
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [collections, setCollections] = useState([]);
   const [optionList, setOptions] = useState(options.items);
 
-  const [fetchOptions] = useLazyQuery(GET_OPTIONS_BY_PAGE, {
-    ssr: false,
-    // Had to be network only as onCompleted doesnt trigger if data is fetched from cache
-    fetchPolicy: 'network-only',
-    variables: {
-      page,
-      products: products.toString() || undefined,
-      collection: selected.collection.toString() || undefined
-    },
-    onCompleted: (data) => {
-      setOptions(data.OptionItems.items);
-    }
-  });
-
-  const [fetchProductsByCategory] = useLazyQuery(GET_PRODUCTS_BY_CATEGORY, {
-    variables: { category: selected.category.toString() },
-    // Had to be network only as onCompleted doesnt trigger if data is fetched from cache
-    fetchPolicy: 'network-only',
-    onCompleted: (data) => {
-      const productIds = data?.ProductItems.items.map((item: { uuid: string }) => item.uuid);
-      if (!productIds.length) {
-        setProducts([]);
-        setOptions([]);
-      } else {
-        setProducts(productIds);
+  const fetchOptions = async (variables = {}) => {
+    const { data } = await client.query({
+      query: GET_OPTIONS_BY_PAGE,
+      variables: {
+        page: page.current,
+        products: products.toString() || undefined,
+        collection: collections.toString() || undefined,
+        ...variables
       }
-    }
-  });
+    });
+    setOptions(data.OptionItems.items);
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === 'all') {
-      return setSelected({ ...selected, [e.target.name]: [] });
-    }
-
-    if (e.target.checked) {
-      return setSelected({ ...selected, [e.target.name]: [...selected[e.target.name], e.target.value] });
+  const fetchProducts = async (category) => {
+    const { data } = await client.query({
+      query: GET_PRODUCTS_BY_CATEGORY,
+      variables: {
+        category: category.toString() || undefined
+      }
+    });
+    const productIds = data.ProductItems.items.map((item: { uuid: string }) => item.uuid);
+    if (!productIds.length) {
+      setProducts([]);
+      setOptions([]);
     } else {
-      return setSelected({
-        ...selected,
-        [e.target.name]: selected[e.target.name].filter((item) => item !== e.target.value)
+      setProducts(productIds.toString());
+      fetchOptions({
+        products: productIds.toString() || undefined
       });
     }
   };
 
-  // only initialize the visual editor if we're in preview mode
-  const { liveStory, liveFooter } = useStoryblok(preview, story, footer);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, setStateMethod) => {
+    if (e.target.value === 'all') {
+      setStateMethod([]);
+    } else if (e.target.checked) {
+      setStateMethod((prevState) => [...prevState, e.target.value]);
+    } else {
+      setStateMethod((prevState) => prevState.filter((item) => item !== e.target.value));
+    }
+  };
 
-  const { bannerImage, title, subtitle } = liveStory.content || {};
+  useEffect(() => {
+    if (mounted.current) {
+      if (categories.length) {
+        fetchProducts(categories);
+      } else {
+        setProducts([]);
+        fetchOptions({ products: undefined });
+      }
+    }
+  }, [categories]);
+
+  useEffect(() => {
+    if (mounted.current) {
+      fetchOptions({
+        collection: collections.toString() || undefined
+      });
+    }
+  }, [collections]);
 
   // To stop queries running on initial mount
   useEffect(() => {
@@ -101,17 +114,10 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
       mounted.current = false;
     };
   }, []);
+  // only initialize the visual editor if we're in preview mode
+  const { liveStory, liveFooter } = useStoryblok(preview, story, footer);
 
-  useEffect(() => {
-    if (mounted.current) {
-      if (selected.category.length) {
-        fetchProductsByCategory();
-      } else {
-        setProducts([]);
-      }
-      fetchOptions();
-    }
-  }, [selected]);
+  const { bannerImage, title, subtitle } = liveStory.content || {};
 
   if (!bannerImage?.filename || !title) {
     return null;
@@ -141,22 +147,32 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
             {subtitle && <h2 className={styles.shopPage_subtitle}>{subtitle}</h2>}
           </div>
         </SbEditable>
-        {!query.slug &&
-          Object.keys(filters).map((filter) => (
+        {!query.slug && (
+          <>
             <Filters
-              key={filter}
-              type={filter}
-              options={filters[filter].items}
-              onChange={handleChange}
-              selected={selected}
+              type="category"
+              options={filters.category.items}
+              onChange={(e) => handleChange(e, setCategories)}
+              selected={categories}
             />
-          ))}
+            <Filters
+              type="collection"
+              options={filters.collection.items}
+              onChange={(e) => handleChange(e, setCollections)}
+              selected={collections}
+            />
+          </>
+        )}
         <div className={styles.shopPage_productList}>
           {!optionList?.length ? (
             <p>There are no products available</p>
           ) : (
-            optionList.map((option) => {
-              return <ProductCard key={option.uuid} {...option} />;
+            optionList.map((option, i) => {
+              const props = {
+                ...option,
+                ...(i === optionList.length - 1 && { ref: null })
+              };
+              return <ProductCard key={option.uuid} {...props} />;
             })
           )}
           <Logo isWatermark />

@@ -5,7 +5,6 @@ import styles from './Hamburger.module.scss';
 interface Props {
   mobileMenuOpen: boolean;
   toggleMobileMenu: () => void;
-  isSolid: boolean;
   inverted: boolean | undefined;
 }
 const Hamburger: FC<Props> = ({ mobileMenuOpen, toggleMobileMenu, inverted }) => {

@@ -44,7 +44,7 @@ export const GET_OPTIONS_BY_PAGE = gql`
     OptionItems(
       filter_query_v2: { hidden: { in: "false" }, collection: { in: $collection }, product: { in: $products } }
       page: $page
-      per_page: 10
+      per_page: 3
     ) {
       ...coreOptionFields
     }
@@ -52,7 +52,7 @@ export const GET_OPTIONS_BY_PAGE = gql`
 `;
 
 export const GET_PRODUCTS_BY_CATEGORY = gql`
-  query getProductsByCategory($category: String!) {
+  query getProductsByCategory($category: String) {
     ProductItems(filter_query_v2: { category: { in: $category } }) {
       items {
         uuid

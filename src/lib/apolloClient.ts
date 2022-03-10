@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { AppProps } from 'next/app';
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
+import { concatPagination } from '@apollo/client/utilities';
 
 // Types
 import type { NormalizedCacheObject, StoreObject } from '@apollo/client';
@@ -25,7 +26,19 @@ const createApolloClient = (preview?: boolean): ApolloClient<NormalizedCacheObje
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
     link: httpLink,
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      // typePolicies: {
+      //   OptionItems: {
+      //     fields: {
+      //       items: {
+      //         merge(existingCache, incomingCache, args) {
+      //           return existingCache ? [...existingCache, ...incomingCache] : incomingCache;
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
+    }),
     credentials: 'include'
   });
 };
