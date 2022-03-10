@@ -42,50 +42,45 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
   const mounted = useRef(false);
   const { total } = options;
   const page = useRef(1);
+  const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [collections, setCollections] = useState<string[]>([]);
   const [optionList, setOptions] = useState<OptionItem[]>(options.items);
   const [hasMore, setHasMore] = useState(options.items.length < total);
 
-  const fetchOptions = useCallback(
-    async (variables = {}, fetchMore?: boolean) => {
-      const { data } = await client.query({
-        query: GET_OPTIONS_BY_PAGE,
-        variables: {
-          page: page.current,
-          products: products.toString() || undefined,
-          collection: collections.toString() || undefined,
-          ...variables
-        }
-      });
-      setOptions((prevState) => (fetchMore ? [...prevState, ...data.OptionItems.items] : data.OptionItems.items));
-      setHasMore(data.OptionItems.items.length < data.OptionItems.total);
-    },
-    [client, collections, products]
-  );
-
-  const fetchProducts = useCallback(
-    async (category: string[]) => {
-      const { data } = await client.query({
-        query: GET_PRODUCTS_BY_CATEGORY,
-        variables: {
-          category: category.toString() || undefined
-        }
-      });
-      const productIds = data.ProductItems.items.map((item: { uuid: string }) => item.uuid);
-      if (!productIds.length) {
-        setProducts([]);
-        setOptions([]);
-      } else {
-        setProducts(productIds.toString());
-        fetchOptions({
-          products: productIds.toString() || undefined
-        });
+  const fetchOptions = useCallback(async (variables = {}, fetchMore?: boolean) => {
+    const { data } = await client.query({
+      query: GET_OPTIONS_BY_PAGE,
+      variables: {
+        page: page.current,
+        products: products.toString() || undefined,
+        collection: collections.toString() || undefined,
+        ...variables
       }
-    },
-    [client, fetchOptions]
-  );
+    });
+    setOptions((prevState) => (fetchMore ? [...prevState, ...data.OptionItems.items] : data.OptionItems.items));
+    setHasMore(data.OptionItems.items.length < data.OptionItems.total);
+  }, []);
+
+  const fetchProducts = useCallback(async (category: string[]) => {
+    const { data } = await client.query({
+      query: GET_PRODUCTS_BY_CATEGORY,
+      variables: {
+        category: category.toString() || undefined
+      }
+    });
+    const productIds = data.ProductItems.items.map((item: { uuid: string }) => item.uuid);
+    if (!productIds.length) {
+      setProducts([]);
+      setOptions([]);
+    } else {
+      setProducts(productIds.toString());
+      fetchOptions({
+        products: productIds.toString() || undefined
+      });
+    }
+  }, []);
 
   const observer = useRef<IntersectionObserver>();
   const lastEl = useCallback(
