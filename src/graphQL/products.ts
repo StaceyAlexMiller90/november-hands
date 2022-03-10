@@ -44,7 +44,7 @@ export const GET_OPTIONS_BY_PAGE = gql`
     OptionItems(
       filter_query_v2: { hidden: { in: "false" }, collection: { in: $collection }, product: { in: $products } }
       page: $page
-      per_page: 3
+      per_page: 10
     ) {
       ...coreOptionFields
     }
