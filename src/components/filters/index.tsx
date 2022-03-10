@@ -8,7 +8,7 @@ interface Props {
   type: string;
   options: CategoryCollection[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  selected: [];
+  selected: string[];
 }
 
 const Filters: FC<Props> = ({ type, options, onChange, selected }) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback, SetStateAction, Dispatch } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
@@ -19,6 +19,7 @@ import { GET_ALL_CATEGORIES, GET_ALL_COLLECTIONS } from '../../graphQL/categorie
 import { getObjectPosition } from '../../utils/utils';
 
 import styles from './ShopPage.module.scss';
+
 interface FetchArgs {
   products: string;
   collection: string;
@@ -38,47 +39,74 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
   const router = useRouter();
   const client = useApolloClient();
   const { query } = router;
-  const mounted = useRef(null);
+  const mounted = useRef(false);
   const { total } = options;
   const page = useRef(1);
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [collections, setCollections] = useState([]);
-  const [optionList, setOptions] = useState(options.items);
+  const [products, setProducts] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [collections, setCollections] = useState<string[]>([]);
+  const [optionList, setOptions] = useState<OptionItem[]>(options.items);
+  const [hasMore, setHasMore] = useState(options.items.length < total);
 
-  const fetchOptions = async (variables = {}) => {
-    const { data } = await client.query({
-      query: GET_OPTIONS_BY_PAGE,
-      variables: {
-        page: page.current,
-        products: products.toString() || undefined,
-        collection: collections.toString() || undefined,
-        ...variables
-      }
-    });
-    setOptions(data.OptionItems.items);
-  };
-
-  const fetchProducts = async (category) => {
-    const { data } = await client.query({
-      query: GET_PRODUCTS_BY_CATEGORY,
-      variables: {
-        category: category.toString() || undefined
-      }
-    });
-    const productIds = data.ProductItems.items.map((item: { uuid: string }) => item.uuid);
-    if (!productIds.length) {
-      setProducts([]);
-      setOptions([]);
-    } else {
-      setProducts(productIds.toString());
-      fetchOptions({
-        products: productIds.toString() || undefined
+  const fetchOptions = useCallback(
+    async (variables = {}, fetchMore?: boolean) => {
+      const { data } = await client.query({
+        query: GET_OPTIONS_BY_PAGE,
+        variables: {
+          page: page.current,
+          products: products.toString() || undefined,
+          collection: collections.toString() || undefined,
+          ...variables
+        }
       });
-    }
-  };
+      setOptions((prevState) => (fetchMore ? [...prevState, ...data.OptionItems.items] : data.OptionItems.items));
+      setHasMore(data.OptionItems.items.length < data.OptionItems.total);
+    },
+    [client, collections, products]
+  );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, setStateMethod) => {
+  const fetchProducts = useCallback(
+    async (category: string[]) => {
+      const { data } = await client.query({
+        query: GET_PRODUCTS_BY_CATEGORY,
+        variables: {
+          category: category.toString() || undefined
+        }
+      });
+      const productIds = data.ProductItems.items.map((item: { uuid: string }) => item.uuid);
+      if (!productIds.length) {
+        setProducts([]);
+        setOptions([]);
+      } else {
+        setProducts(productIds.toString());
+        fetchOptions({
+          products: productIds.toString() || undefined
+        });
+      }
+    },
+    [client, fetchOptions]
+  );
+
+  const observer = useRef<IntersectionObserver>();
+  const lastEl = useCallback(
+    (node) => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          page.current += 1;
+          fetchOptions(undefined, true);
+        }
+      });
+      if (node) {
+        observer.current.observe(node);
+      }
+    },
+    [hasMore, fetchOptions]
+  );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, setStateMethod: Dispatch<SetStateAction<string[]>>) => {
     if (e.target.value === 'all') {
       setStateMethod([]);
     } else if (e.target.checked) {
@@ -90,22 +118,26 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
 
   useEffect(() => {
     if (mounted.current) {
+      page.current = 1;
       if (categories.length) {
         fetchProducts(categories);
       } else {
         setProducts([]);
-        fetchOptions({ products: undefined });
+        fetchOptions({
+          products: undefined
+        });
       }
     }
-  }, [categories]);
+  }, [categories, fetchOptions, fetchProducts]);
 
   useEffect(() => {
     if (mounted.current) {
+      page.current = 1;
       fetchOptions({
         collection: collections.toString() || undefined
       });
     }
-  }, [collections]);
+  }, [collections, fetchOptions]);
 
   // To stop queries running on initial mount
   useEffect(() => {
@@ -170,7 +202,7 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
             optionList.map((option, i) => {
               const props = {
                 ...option,
-                ...(i === optionList.length - 1 && { ref: null })
+                ...(i === optionList.length - 1 && { ref: lastEl })
               };
               return <ProductCard key={option.uuid} {...props} />;
             })
