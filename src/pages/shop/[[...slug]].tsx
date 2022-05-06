@@ -11,7 +11,6 @@ import { useStoryblok } from '../../lib/storyblok';
 import Layout from '../../layouts/index';
 import ProductCard from '../../components/product-card';
 import Filters from '../../components/filters';
-import Logo from '../../components/logo';
 import { CategoryCollection, Footer, OptionItem, ProductPage } from '../../interfaces/stories';
 import { GET_PRODUCT_PAGE } from '../../graphQL/pages';
 import { GET_OPTIONS_BY_PAGE, GET_PRODUCTS_BY_CATEGORY } from '../../graphQL/products';
@@ -36,18 +35,19 @@ interface Props {
 }
 
 const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, options, filters }) => {
-  const router = useRouter();
+  const { query } = useRouter();
   const client = useApolloClient();
-  const { query } = router;
   const mounted = useRef(false);
   const { total } = options;
   const page = useRef(1);
-  const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [collections, setCollections] = useState<string[]>([]);
   const [optionList, setOptions] = useState<OptionItem[]>(options.items);
   const [hasMore, setHasMore] = useState(options.items.length < total);
+
+  // In the case of a category/collection page, show e.g. Collection: xxx
+  const title = typeof query?.slug === 'object' && query.slug.slice(0, 2).join(' - ');
 
   const fetchOptions = useCallback(
     async (variables = {}, fetchMore?: boolean) => {
@@ -129,7 +129,7 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
         });
       }
     }
-  }, [categories]);
+  }, [categories, fetchOptions, fetchProducts]);
 
   useEffect(() => {
     if (mounted.current) {
@@ -138,7 +138,7 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
         collection: collections.toString() || undefined
       });
     }
-  }, [collections]);
+  }, [collections, fetchOptions]);
 
   // To stop queries running on initial mount
   useEffect(() => {
@@ -150,9 +150,9 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
   // only initialize the visual editor if we're in preview mode
   const { liveStory, liveFooter } = useStoryblok(preview, story, footer);
 
-  const { bannerImage, title, subtitle } = liveStory.content || {};
+  const { bannerImage, title: generalTitle, subtitle } = liveStory.content || {};
 
-  if (!bannerImage?.filename || !title) {
+  if (!bannerImage?.filename) {
     return null;
   }
 
@@ -176,7 +176,7 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
                 priority
               />
             </div>
-            <h1 className={styles.shopPage_title}>{title}</h1>
+            <h1 className={styles.shopPage_title}>{title || generalTitle}</h1>
             {subtitle && <h2 className={styles.shopPage_subtitle}>{subtitle}</h2>}
           </div>
         </SbEditable>
@@ -208,7 +208,6 @@ const ProductPage: NextPage<Props> = ({ story, preview, footer, pageType, option
               return <ProductCard key={option.uuid} {...props} />;
             })
           )}
-          <Logo isWatermark />
         </div>
       </Layout>
     </>

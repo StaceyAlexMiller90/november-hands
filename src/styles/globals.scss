@@ -41,6 +41,10 @@ body {
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
+  color: $darkest-brown;
+  font-family: $secondary-font;
+  font-size: px2rem(16);
+  line-height: px2rem(22);
 }
 
 /* Remove list styles on ul, ol elements with a class attribute */

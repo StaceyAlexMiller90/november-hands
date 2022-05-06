@@ -15,6 +15,7 @@
 .shopPage_title {
   @include serif("xl");
 
+  text-transform: capitalize;
   margin-top: map-get($spacing, 4);
   margin-bottom: map-get($spacing, 1);
   margin-left: map-get($spacing, 1);

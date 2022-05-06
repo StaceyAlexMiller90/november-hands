@@ -12,10 +12,11 @@ export const CORE_OPTION_FIELDS = gql`
         component
         discountPercentage
         hidden
-        priceSupplement
+        price
         product {
           content
           name
+          uuid
         }
         colour {
           name
@@ -47,6 +48,37 @@ export const GET_OPTIONS_BY_PAGE = gql`
       per_page: 10
     ) {
       ...coreOptionFields
+    }
+  }
+`;
+
+export const GET_ALL_OPTIONS = gql`
+  ${CORE_OPTION_FIELDS}
+  query getAllOptions {
+    OptionItems(filter_query_v2: { hidden: { in: "false" } }) {
+      ...coreOptionFields
+    }
+  }
+`;
+
+export const GET_OPTIONS_BY_PRODUCT = gql`
+  ${CORE_OPTION_FIELDS}
+  query getOptionsByProduct($productId: String) {
+    OptionItems(filter_query_v2: { product: { in: $productId } }) {
+      ...coreOptionFields
+    }
+  }
+`;
+
+export const GET_PRODUCT_BY_ID = gql`
+  query getProductById($productId: ID!) {
+    ProductItem(id: $productId, find_by: "uuid") {
+      name
+      content {
+        dimensions
+        description
+        subtitle
+      }
     }
   }
 `;

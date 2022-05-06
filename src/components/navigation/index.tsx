@@ -15,7 +15,6 @@ interface Props {
 const Navigation: FC<Props> = ({ mobileMenuOpen, isSolid, inverted, isMobile }) => {
   const router = useRouter();
   const { asPath } = router;
-
   return (
     <nav
       className={classNames(styles.navigation, {
@@ -43,7 +42,7 @@ const Navigation: FC<Props> = ({ mobileMenuOpen, isSolid, inverted, isMobile }) 
           })}
         >
           <Link href="/about">
-            <a>About</a>
+            <a className={styles.navigationLink}>About</a>
           </Link>
         </li>
         <li
@@ -52,7 +51,7 @@ const Navigation: FC<Props> = ({ mobileMenuOpen, isSolid, inverted, isMobile }) 
           })}
         >
           <Link href="/shop">
-            <a>Shop</a>
+            <a className={styles.navigationLink}>Shop</a>
           </Link>
         </li>
         <li
@@ -61,13 +60,13 @@ const Navigation: FC<Props> = ({ mobileMenuOpen, isSolid, inverted, isMobile }) 
           })}
         >
           <Link href="/contact">
-            <a>Contact</a>
+            <a className={styles.navigationLink}>Contact</a>
           </Link>
         </li>
         {!isMobile && <li className={classNames(styles.navigationItem)}>Search</li>}
         <li className={classNames(styles.navigationItem)}>
           <Link href="/cart">
-            <a>Cart</a>
+            <a className={styles.navigationLink}>Cart</a>
           </Link>
         </li>
       </ul>

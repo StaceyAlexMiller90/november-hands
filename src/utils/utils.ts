@@ -18,8 +18,3 @@ export const getObjectPosition = (image: ImageProps) => {
   const topDistance = (Number(top) / Number(height)) * 100;
   return `${leftDistance}% ${topDistance}%`;
 };
-
-export const getPriceInfo = (product: { content: { basePrice: string } }, priceSupplement: string): number => {
-  const { basePrice } = product.content;
-  return priceSupplement ? Number(basePrice) + Number(priceSupplement) : Number(basePrice);
-};

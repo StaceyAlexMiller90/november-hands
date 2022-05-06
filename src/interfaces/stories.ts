@@ -37,6 +37,16 @@ export interface ProductPage {
   };
 }
 
+export interface ProductItem {
+  content: {
+    dimensions: string;
+    subtitle: string;
+    description: string;
+    category: CategoryCollection;
+  };
+  name: string;
+  uuid: string;
+}
 export interface OptionItem {
   slug: string;
   uuid: string;
@@ -46,13 +56,8 @@ export interface OptionItem {
     component: string;
     discountPercentage: string;
     hidden: boolean;
-    priceSupplement: string;
-    product: {
-      content: {
-        basePrice: string;
-      };
-      name: string;
-    };
+    price: number;
+    product: ProductItem;
     colour: {
       name: string;
     };

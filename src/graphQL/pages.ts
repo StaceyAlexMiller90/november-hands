@@ -75,3 +75,12 @@ export const GET_PRODUCT_PAGE = gql`
     }
   }
 `;
+
+export const GET_FOOTER = gql`
+  ${CORE_FOOTER_FIELDS}
+  query getFooter {
+    FooterItem(id: "905b09f0-124b-42c4-b54f-c649f74a5d34", find_by: "uuid") {
+      ...coreFooterFields
+    }
+  }
+`;
