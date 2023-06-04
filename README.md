@@ -1,3 +1,9 @@
+## Work in progress
+
+This is work in progress side project to strengthen my skills by creating a small webshop hooked up to a CMS showcasing handmade ceramics. This is built with next.js / typescript / apollo client / graphql and Storyblok CMS. The plan is to manage product stock and orders via a tool such as Snipcart which is not yet implemented.
+
+With the knowledge I have built over time since I started this project, I would like to eventually look into replacing apollo with SWR / React Query, migrate to Next.js 13 and also use the new V2 Storyblok.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
